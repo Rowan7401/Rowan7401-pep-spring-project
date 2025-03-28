@@ -76,10 +76,10 @@ public class SocialMediaController {
 
     @GetMapping("/messages/{messageId}")
     public ResponseEntity<Message> getMessageById(@PathVariable int messageId) {
-        Optional<Message> message = messageService.getMessageId(messageId);
+        Message message = messageService.getMessageById(messageId);
 
-        if (message.isPresent()) {
-            return ResponseEntity.status(200).body(message.get());
+        if (message != null) {
+            return ResponseEntity.status(200).body(message);
         }
         else {
             System.out.println("No message with this ID found. Please try again");
