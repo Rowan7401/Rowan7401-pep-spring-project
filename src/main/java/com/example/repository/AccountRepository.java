@@ -14,7 +14,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     Optional<Account> findByUsername(@Param("username") String username);
 
     @Query("SELECT a FROM Account a WHERE a.accountId = :accountId")
-    Account findById(@Param("accountId") Integer accountId);
+    Optional<Account> findById(@Param("accountId") Integer accountId);
 
     Account save (Account account);
 

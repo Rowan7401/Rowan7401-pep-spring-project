@@ -16,7 +16,7 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
     List<Message> findAll();
 
     @Query("SELECT m FROM Message m WHERE m.messageId = :messageId")
-    Message findById(@Param("messageId") Integer messageId);
+    Optional<Message> findById(@Param("messageId") Integer messageId);
 
     Message save(Message message);
 

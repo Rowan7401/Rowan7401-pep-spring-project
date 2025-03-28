@@ -47,10 +47,10 @@ public class AccountService {
     }
 
     public Account getById(Integer iD) {
-        Account existingAcc = accountRepository.findById(iD);
+        Optional<Account> existingAcc = accountRepository.findById(iD);
         
-        if (existingAcc != null) {
-            return existingAcc;
+        if (existingAcc.isPresent()) {
+            return existingAcc.get();
         }
         else {
             System.out.println("Username or password invalid. Please try again.");
