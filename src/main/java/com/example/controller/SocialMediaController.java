@@ -58,13 +58,13 @@ public class SocialMediaController {
     @PostMapping("/messages")
     public ResponseEntity<Message> createMessage(@RequestBody Message message) {
         Integer userId =  message.getPostedBy();
-        Account user = accountService.findById(userId);
+        Account user = accountService.getById(userId);
 
         if (user != null) {
             Message createdMessage = messageService.createMessage(message);
         
             if (createdMessage != null) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(createdMessage);
+                return ResponseEntity.status(200).body(createdMessage);
             }
             else {
                 System.out.println("Invalid message attempted to create. Error, please try again.");

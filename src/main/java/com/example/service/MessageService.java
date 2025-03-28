@@ -65,9 +65,9 @@ public class MessageService {
     }
 
     public boolean deleteMessage(Integer messageId) {
-        Optional<Message> existingM = messageRepository.findById(messageId);
+        Message existingM = messageRepository.findById(messageId);
 
-        if (existingM.isPresent()) {
+        if (existingM != null) {
             messageRepository.deleteById(messageId);
             return true;
         }
@@ -79,12 +79,11 @@ public class MessageService {
     }
 
     public Message updateMessage(Integer messageId, String newMessageText) {
-        Optional<Message> messageOpt = messageRepository.findById(messageId);
+        Message existingM = messageRepository.findById(messageId);
 
-        if (messageOpt.isPresent()) {
-            Message message = messageOpt.get();
-            message.setMessageText(newMessageText);
-            return messageRepository.save(message);
+        if (existingM != null) {
+            existingM.setMessageText(newMessageText);
+            return messageRepository.save(existingM);
         }
         else {
             System.out.println("No message with that ID to delete.");
@@ -93,9 +92,9 @@ public class MessageService {
     }
 
     public List<Message> getMessagesByUserId(Integer userId) {
-        Optional<Account> account = accountRepository.findById(userId);
+        Account account = accountRepository.findById(userId);
 
-        if (account.isPresent()) {
+        if (account != null) {
             List<Message> messages = messageRepository.findPostedBy(userId);
 
             if (messages.size() == 0) {

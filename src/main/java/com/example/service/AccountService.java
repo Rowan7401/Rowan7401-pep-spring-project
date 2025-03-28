@@ -46,8 +46,8 @@ public class AccountService {
         }
     }
 
-    public Account findById(Integer iD) {
-        Account existingAcc = accountRepository.getById(iD);
+    public Account getById(Integer iD) {
+        Account existingAcc = accountRepository.findById(iD);
         
         if (existingAcc != null) {
             return existingAcc;
