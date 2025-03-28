@@ -56,14 +56,28 @@ public class SocialMediaController {
 
     @PostMapping("/messages")
     public ResponseEntity<Message> createMessage(@RequestBody Message message) {
-        Message createdMessage = messageService.createMessage(message);
+        int userId =  message.getPostedBy();
+        Account user = accountService.findById(userId);
+
+        if (user != null) {
+            Message createdMessage = messageService.createMessage(message);
         
-        if (createdMessage != null) {
-            return ResponseEntity.status(200).body(createdMessage);
+            if (createdMessage != null) {
+                return ResponseEntity.status(200).body(createdMessage);
+            }
+            else {
+                System.out.println("Invalid message attempted to create. Error, please try again.");
+                return ResponseEntity.status(400).body(null);
+            }
+
         }
         else {
-            return ResponseEntity.status(400).body(null);
+            System.out.println("User Id invalid. No user with that ID exists in DB.");
+            return null;
         }
+
+
+        
         
     }
 
@@ -88,15 +102,15 @@ public class SocialMediaController {
     }
 
     @DeleteMapping("/messages/{messageId}")
-    public ResponseEntity<Void> deleteMessage(@PathVariable int messageId) {
+    public ResponseEntity<Boolean> deleteMessage(@PathVariable int messageId) {
         boolean deleted = messageService.deleteMessage(messageId);
 
         if (deleted) {
-            return ResponseEntity.status(200).build();
+            return ResponseEntity.status(200).body(deleted);
         }
         else {
             System.out.println("No message with this ID found to delete. Please try again.");
-            return ResponseEntity.status(200).build();
+            return ResponseEntity.status(200).body(deleted);
 
         }
        
@@ -107,10 +121,21 @@ public class SocialMediaController {
         Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
         
         if (updatedMessage != null) {
-            return ResponseEntity.status(200).body(updatedMessage);
+            if (updatedMessage.getMessageText().length() > 255) {
+                System.out.println("Updated message too long. Please try again with a text less than 255 characters.");
+                return ResponseEntity.status(400).body(null);
+            }
+            else if (updatedMessage.getMessageText().length() == 0) {
+                System.out.println("Updated message text blank. Please try again with valid input.");
+                return ResponseEntity.status(400).body(null);
+            }
+            else {
+                return ResponseEntity.status(200).body(updatedMessage);
+            }
+            
         }
         else {
-            System.out.println("There seems to be no message with this ID to update. Or, updated text is invalid.");
+            System.out.println("There seems to be no message with this ID to update.");
             System.out.println("Please try again");
             return ResponseEntity.status(400).body(null);
         }

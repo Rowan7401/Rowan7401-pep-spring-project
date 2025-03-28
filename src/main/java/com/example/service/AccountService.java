@@ -46,4 +46,16 @@ public class AccountService {
         }
     }
 
+    public Account findById(int iD) {
+        Account existingAcc = accountRepository.getById(iD);
+        
+        if (existingAcc != null) {
+            return existingAcc;
+        }
+        else {
+            System.out.println("Username or password invalid. Please try again.");
+            return null;
+        }
+    }
+
 }
