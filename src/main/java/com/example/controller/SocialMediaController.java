@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.entity.*;
@@ -56,14 +57,14 @@ public class SocialMediaController {
 
     @PostMapping("/messages")
     public ResponseEntity<Message> createMessage(@RequestBody Message message) {
-        int userId =  message.getPostedBy();
+        Integer userId =  message.getPostedBy();
         Account user = accountService.findById(userId);
 
         if (user != null) {
             Message createdMessage = messageService.createMessage(message);
         
             if (createdMessage != null) {
-                return ResponseEntity.status(200).body(createdMessage);
+                return ResponseEntity.status(HttpStatus.CREATED).body(createdMessage);
             }
             else {
                 System.out.println("Invalid message attempted to create. Error, please try again.");
@@ -75,9 +76,6 @@ public class SocialMediaController {
             System.out.println("User Id invalid. No user with that ID exists in DB.");
             return null;
         }
-
-
-        
         
     }
 
@@ -88,7 +86,7 @@ public class SocialMediaController {
     }
 
     @GetMapping("/messages/{messageId}")
-    public ResponseEntity<Message> getMessageById(@PathVariable int messageId) {
+    public ResponseEntity<Message> getMessageById(@PathVariable Integer messageId) {
         Message message = messageService.getMessageById(messageId);
 
         if (message != null) {
@@ -102,7 +100,7 @@ public class SocialMediaController {
     }
 
     @DeleteMapping("/messages/{messageId}")
-    public ResponseEntity<Boolean> deleteMessage(@PathVariable int messageId) {
+    public ResponseEntity<Boolean> deleteMessage(@PathVariable Integer messageId) {
         boolean deleted = messageService.deleteMessage(messageId);
 
         if (deleted) {
@@ -117,7 +115,7 @@ public class SocialMediaController {
     }
 
     @PatchMapping("/messages/{messageId}")
-    public ResponseEntity<Message> updateMessage(@PathVariable int messageId, @RequestBody String newMessageText) {
+    public ResponseEntity<Message> updateMessage(@PathVariable Integer messageId, @RequestBody String newMessageText) {
         Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
         
         if (updatedMessage != null) {
@@ -142,7 +140,7 @@ public class SocialMediaController {
     }
 
     @GetMapping("/accounts/{accountId}/messages")
-    public ResponseEntity<List<Message>> getMessagesByUserId(@PathVariable int accountId) {
+    public ResponseEntity<List<Message>> getMessagesByUserId(@PathVariable Integer accountId) {
         List<Message> messages = messageService.getMessagesByUserId(accountId);
 
         if (messages.size() == 0) {

@@ -52,7 +52,7 @@ public class MessageService {
         }
     }
 
-    public Message getMessageById(int messageId) {
+    public Message getMessageById(Integer messageId) {
         Message existingM = messageRepository.getById(messageId);
 
         if (existingM == null) {
@@ -64,7 +64,7 @@ public class MessageService {
         }
     }
 
-    public boolean deleteMessage(int messageId) {
+    public boolean deleteMessage(Integer messageId) {
         Optional<Message> existingM = messageRepository.findById(messageId);
 
         if (existingM.isPresent()) {
@@ -78,7 +78,7 @@ public class MessageService {
         
     }
 
-    public Message updateMessage(int messageId, String newMessageText) {
+    public Message updateMessage(Integer messageId, String newMessageText) {
         Optional<Message> messageOpt = messageRepository.findById(messageId);
 
         if (messageOpt.isPresent()) {
@@ -92,7 +92,7 @@ public class MessageService {
         }
     }
 
-    public List<Message> getMessagesByUserId(int userId) {
+    public List<Message> getMessagesByUserId(Integer userId) {
         Optional<Account> account = accountRepository.findById(userId);
 
         if (account.isPresent()) {
