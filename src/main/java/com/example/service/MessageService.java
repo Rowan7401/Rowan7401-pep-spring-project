@@ -28,8 +28,17 @@ public class MessageService {
         return messageRepository.findById(messageId);
     }
 
-    public void deleteMessage(int messageId) {
-        messageRepository.deleteById(messageId);
+    public boolean deleteMessage(int messageId) {
+        Optional<Message> existingM = messageRepository.findById(messageId);
+
+        if (existingM.isPresent()) {
+            messageRepository.deleteById(messageId);
+            return true;
+        }
+        else {
+            return false;
+        }
+        
     }
 
     public Message updateMessage(int messageId, String newMessageText) {

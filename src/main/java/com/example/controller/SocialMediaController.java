@@ -34,11 +34,11 @@ public class SocialMediaController {
         boolean registered = accountService.register(account);
 
         if (registered) {
-            return ResponseEntity.ok(account);
+            return ResponseEntity.status(200).body(account);
         }
         else {
             System.out.println("Account failed to register. Clientside error");
-            return ResponseEntity.status(409).build();
+            return ResponseEntity.status(409).body(null);
         }
     }
 
@@ -47,24 +47,31 @@ public class SocialMediaController {
         Optional<Account> loggedInAcc = accountService.login(account);
 
         if (loggedInAcc.isPresent()) {
-            return ResponseEntity.ok(loggedInAcc.get());
+            return ResponseEntity.status(200).body(loggedInAcc.get());
         }
         else {
             System.out.println("Account failed to login. Clientside error.");
-            return ResponseEntity.status(404).build();
+            return ResponseEntity.status(401).body(null);
         }
     }
 
     @PostMapping("/messages")
     public ResponseEntity<Message> createMessage(@RequestBody Message message) {
         Message createdMessage = messageService.createMessage(message);
-        return ResponseEntity.ok(createdMessage);
+        
+        if (createdMessage != null) {
+            return ResponseEntity.status(200).body(createdMessage);
+        }
+        else {
+            return ResponseEntity.status(400).body(null);
+        }
+        
     }
 
     @GetMapping("/messages")
     public ResponseEntity<List<Message>> getAllMessages() {
         List<Message> messages = messageService.getAllMessages();
-        return ResponseEntity.ok(messages);
+        return ResponseEntity.status(200).body(messages);
     }
 
     @GetMapping("/messages/{messageId}")
@@ -72,19 +79,28 @@ public class SocialMediaController {
         Optional<Message> message = messageService.getMessageId(messageId);
 
         if (message.isPresent()) {
-            return ResponseEntity.ok(message.get());
+            return ResponseEntity.status(200).body(message.get());
         }
         else {
             System.out.println("No message with this ID found. Please try again");
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(200).body(null);
 
         }
     }
 
     @DeleteMapping("/messages/{messageId}")
     public ResponseEntity<Void> deleteMessage(@PathVariable int messageId) {
-        messageService.deleteMessage(messageId);
-        return ResponseEntity.ok().build();
+        boolean deleted = messageService.deleteMessage(messageId);
+
+        if (deleted) {
+            return ResponseEntity.status(200).build();
+        }
+        else {
+            System.out.println("No message with this ID found to delete. Please try again.");
+            return ResponseEntity.status(200).build();
+
+        }
+       
     }
 
     @PatchMapping("/messages/{messageId}")
@@ -92,18 +108,27 @@ public class SocialMediaController {
         Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
         
         if (updatedMessage != null) {
-            return ResponseEntity.ok(updatedMessage);
+            return ResponseEntity.status(200).body(updatedMessage);
         }
         else {
             System.out.println("There seems to be no message with this ID to update. Or, updated text is invalid.");
             System.out.println("Please try again");
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(400).body(null);
         }
     }
 
     @GetMapping("/accounts/{accountId}/messages")
     public ResponseEntity<List<Message>> getMessagesByUserId(@PathVariable int accountId) {
         List<Message> messages = messageService.getMessagesByUserId(accountId);
-        return ResponseEntity.ok(messages);
+
+        if (messages.size() == 0) {
+            System.out.println("This user seems to have no messages.");
+            return ResponseEntity.status(200).body(null);
+        }
+        else {
+            return ResponseEntity.status(200).body(messages);
+
+        }
+        
     } 
 }
