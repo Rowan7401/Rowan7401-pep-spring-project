@@ -2,10 +2,14 @@ package com.example.repository;
 
 import com.example.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 
 import java.util.*;
 
 public interface MessageRepository extends JpaRepository<Message, Integer> {
-    List<Message> findPostedBy(int postedBy);
+
+    @Query("SELECT m FROM Message m WHERE m.postedBy = :postedBy")
+    List<Message> findPostedBy(@Param("postedBy") int postedBy);
 
 }
