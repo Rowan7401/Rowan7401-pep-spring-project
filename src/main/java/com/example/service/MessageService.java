@@ -84,7 +84,8 @@ public class MessageService {
         if (existingM.isPresent()) {
             Message updated = existingM.get();
             updated.setMessageText(newMessageText);
-            return messageRepository.save(updated);
+            messageRepository.save(updated);
+            return updated;
         }
         else {
             System.out.println("No message with that ID to delete.");
