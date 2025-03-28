@@ -17,7 +17,6 @@ import java.util.*;
  */
 
 @RestController
-@RequestMapping("/api")
 public class SocialMediaController {
 
     private final AccountService accountService;
