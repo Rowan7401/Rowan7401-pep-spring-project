@@ -90,6 +90,10 @@ public class SocialMediaApp {
         Message badUpdated = messageService.updateMessage(2, "");
         System.out.println("Updated message with ID: " + badUpdated.getMessageId() + " to " + badUpdated);
 
+        System.out.println();
+        Message badGetMessage = messageService.getMessageById(2);
+        System.out.println("Got message with ID: " + badGetMessage.getMessageId() + " to " + badGetMessage);
+
     }
 
 }
