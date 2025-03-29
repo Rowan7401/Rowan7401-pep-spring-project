@@ -129,7 +129,7 @@ public class SocialMediaController {
     }
 
     @PatchMapping("/messages/{messageId}")
-    public ResponseEntity<Message> updateMessage(@PathVariable Integer messageId, @RequestBody Map<String, String> body) {
+    public ResponseEntity<Integer> updateMessage(@PathVariable Integer messageId, @RequestBody Map<String, String> body) {
         String newMessageText = body.get("messageText");
 
         if (newMessageText == null || newMessageText.trim().isEmpty()) {
@@ -146,12 +146,13 @@ public class SocialMediaController {
             Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
 
             if (updatedMessage != null) {
-                return ResponseEntity.status(200).body(updatedMessage);
+                return ResponseEntity.status(200).body(1);
             } else {
                 System.out.println("No message found with ID: " + messageId);
-                return ResponseEntity.status(404).body(null);
+                return ResponseEntity.status(400).body(null);
             }
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             System.out.println("Unexpected error: " + e.getMessage());
             return ResponseEntity.status(500).body(null);
         }
