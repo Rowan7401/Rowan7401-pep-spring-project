@@ -91,7 +91,7 @@ public class MessageService {
         if (existingM.isPresent()) {
             Message updated = existingM.get();
             updated.setMessageText(newMessageText);
-            // messageRepository.save(updated);
+            messageRepository.save(updated);
             return updated;
         }
         else {

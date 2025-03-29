@@ -130,27 +130,32 @@ public class SocialMediaController {
 
     @PatchMapping("/messages/{messageId}")
     public ResponseEntity<Message> updateMessage(@PathVariable Integer messageId, @RequestBody String newMessageText) {
+        if (newMessageText == null || newMessageText.trim().isEmpty()) {
+            System.out.println("Updated message text is blank.");
+            return ResponseEntity.status(400).body(null);
+        }
+    
+        if (newMessageText.length() > 255) {
+            System.out.println("Updated message is too long.");
+            return ResponseEntity.status(400).body(null);
+        }
+    
         try {
             Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
-
+    
             if (updatedMessage != null) {
-                return ResponseEntity.ok(updatedMessage);
+                return ResponseEntity.status(200).body(updatedMessage);
             } else {
-                System.out.println("No message with this ID to update.");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                System.out.println("No message found with ID: " + messageId);
+                return ResponseEntity.status(404).body(null);
             }
-
-        } 
-        catch (IllegalArgumentException e) {
-            System.out.println("Invalid input for update: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } 
         catch (Exception e) {
             System.out.println("Unexpected error: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(500).body(null);
         }
     }
-
+    
 
 
     @GetMapping("/accounts/{accountId}/messages")
