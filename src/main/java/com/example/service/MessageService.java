@@ -23,19 +23,28 @@ public class MessageService {
     }
 
     public Message createMessage(Message message) {
+        Integer validID = message.getPostedBy();
+        Account validAcc = accountRepository.getById(validID);
 
-        if (message.getMessageText().length() > 255) {
-            System.out.println("Message text is too long. Please create message with less that 255 characters");
-            return null;
-        }
-        else if (message.getMessageText().length() == 0) {
-            System.out.println("Message text is blank. Please try again with valid message text");
-            return null;
+        if (validAcc != null) {
+            if (message.getMessageText().length() > 255) {
+                System.out.println("Message text is too long. Please create message with less that 255 characters");
+                return null;
+            }
+            else if (message.getMessageText().length() == 0) {
+                System.out.println("Message text is blank. Please try again with valid message text");
+                return null;
+            }
+            else {
+                return messageRepository.save(message);
+    
+            }
         }
         else {
-            return messageRepository.save(message);
-
+            System.out.println("Not a valid Account ID to use for a post.");
+            return null;
         }
+        
 
         
     }
