@@ -129,32 +129,34 @@ public class SocialMediaController {
     }
 
     @PatchMapping("/messages/{messageId}")
-    public ResponseEntity<Message> updateMessage(@PathVariable Integer messageId, @RequestBody String newMessageText) {
+    public ResponseEntity<Message> updateMessage(@PathVariable Integer messageId, @RequestBody Map<String, String> body) {
+        String newMessageText = body.get("messageText");
+
         if (newMessageText == null || newMessageText.trim().isEmpty()) {
             System.out.println("Updated message text is blank.");
             return ResponseEntity.status(400).body(null);
         }
-    
+
         if (newMessageText.length() > 255) {
             System.out.println("Updated message is too long.");
             return ResponseEntity.status(400).body(null);
         }
-    
+
         try {
             Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
-    
+
             if (updatedMessage != null) {
                 return ResponseEntity.status(200).body(updatedMessage);
             } else {
                 System.out.println("No message found with ID: " + messageId);
                 return ResponseEntity.status(404).body(null);
             }
-        } 
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Unexpected error: " + e.getMessage());
             return ResponseEntity.status(500).body(null);
         }
     }
+
     
 
 
