@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.entity.*;
@@ -131,31 +131,26 @@ public class SocialMediaController {
     @PatchMapping("/messages/{messageId}")
     public ResponseEntity<Message> updateMessage(@PathVariable Integer messageId, @RequestBody String newMessageText) {
         try {
-            if (newMessageText == null || newMessageText.length() == 0) {
-                System.out.println("Updated message text is blank. Please try again with valid input.");
-                return ResponseEntity.status(400).body(null);
-            }
-            else if (newMessageText.length() > 255) {
-                System.out.println("Updated message too long. Please try again with a text less than 255 characters.");
-                return ResponseEntity.status(400).body(null);
-            }
-            else {
-                Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
+            Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
 
-                if (updatedMessage != null) {
-                    return ResponseEntity.status(200).body(updatedMessage);
-                } else {
-                    System.out.println("There seems to be no message with this ID to update.");
-                    return ResponseEntity.status(400).body(null);
-                }
-
+            if (updatedMessage != null) {
+                return ResponseEntity.ok(updatedMessage);
+            } else {
+                System.out.println("No message with this ID to update.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
+
+        } 
+        catch (IllegalArgumentException e) {
+            System.out.println("Invalid input for update: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } 
         catch (Exception e) {
-            System.out.println("Error occurred during update: " + e.getMessage());
-            return ResponseEntity.status(500).body(null); 
+            System.out.println("Unexpected error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
 
 
     @GetMapping("/accounts/{accountId}/messages")

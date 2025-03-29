@@ -86,24 +86,17 @@ public class MessageService {
     }
 
     public Message updateMessage(Integer messageId, String newMessageText) {
-        if (newMessageText == null || newMessageText.length() == 0) {
-            System.out.println("MSG Service says invalid newMessage text.");
-            throw new IllegalArgumentException("Blank input...");
+        Optional<Message> existingM = messageRepository.findById(messageId);
+
+        if (existingM.isPresent()) {
+            Message updated = existingM.get();
+            updated.setMessageText(newMessageText);
+            // messageRepository.save(updated);
+            return updated;
         }
         else {
-            Optional<Message> existingM = messageRepository.findById(messageId);
-
-            if (existingM.isPresent()) {
-                Message updated = existingM.get();
-                updated.setMessageText(newMessageText);
-                // messageRepository.save(updated);
-                return updated;
-            }
-            else {
-                System.out.println("No message with that ID to update.");
-                return null;
-            }
-
+            System.out.println("No message with that ID to update.");
+            return null;
         }
         
     }
