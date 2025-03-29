@@ -110,7 +110,7 @@ public class MessageService {
 
             if (messages.size() == 0) {
                 System.out.println("This user has no messages.");
-                return null;
+                return messages;
             }
             else {
                 return messages;

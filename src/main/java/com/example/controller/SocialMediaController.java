@@ -122,7 +122,7 @@ public class SocialMediaController {
         }
         else {
             System.out.println("No message with this ID found to delete. Please try again.");
-            return ResponseEntity.status(200).body(null);
+            return ResponseEntity.status(200).body(false);
 
         }
        
@@ -131,7 +131,7 @@ public class SocialMediaController {
     @PatchMapping("/messages/{messageId}")
     public ResponseEntity<Message> updateMessage(@PathVariable Integer messageId, @RequestBody String newMessageText) {
         try {
-            if (newMessageText == null || newMessageText.trim().isEmpty()) {
+            if (newMessageText == null || newMessageText.length() == 0) {
                 System.out.println("Updated message text is blank. Please try again with valid input.");
                 return ResponseEntity.status(400).body(null);
             }
@@ -150,12 +150,10 @@ public class SocialMediaController {
                 }
 
             }
-
-            
-
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             System.out.println("Error occurred during update: " + e.getMessage());
-            return ResponseEntity.status(500).body(null); // Return proper 500 instead of null
+            return ResponseEntity.status(500).body(null); 
         }
     }
 
