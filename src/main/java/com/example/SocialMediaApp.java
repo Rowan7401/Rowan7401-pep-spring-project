@@ -87,7 +87,7 @@ public class SocialMediaApp {
 
         // Invalid message update
         System.out.println();
-        Message badUpdated = messageService.updateMessage(2345, "Mole Skunk!");
+        Message badUpdated = messageService.updateMessage(2, "");
         System.out.println("Updated message with ID: " + badUpdated.getMessageId() + " to " + badUpdated);
 
     }

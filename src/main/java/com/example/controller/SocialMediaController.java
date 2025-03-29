@@ -134,11 +134,11 @@ public class SocialMediaController {
             Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
         
             if (updatedMessage != null) {
-                if (updatedMessage.getMessageText().length() > 255) {
+                if (newMessageText.length() > 255) {
                     System.out.println("Updated message too long. Please try again with a text less than 255 characters.");
                     return ResponseEntity.status(400).body(null);
                 }
-                else if (updatedMessage.getMessageText().length() == 0) {
+                else if (newMessageText.length() == 0) {
                     System.out.println("Updated message text blank. Please try again with valid input.");
                     return ResponseEntity.status(400).body(null);
                 }

@@ -97,7 +97,7 @@ public class MessageService {
             return updated;
         }
         else {
-            System.out.println("No message with that ID to delete.");
+            System.out.println("No message with that ID to update.");
             return null;
         }
     }
