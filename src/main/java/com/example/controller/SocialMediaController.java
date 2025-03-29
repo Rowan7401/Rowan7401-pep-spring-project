@@ -122,7 +122,7 @@ public class SocialMediaController {
         }
         else {
             System.out.println("No message with this ID found to delete. Please try again.");
-            return ResponseEntity.status(200).body(false);
+            return ResponseEntity.status(200).body(null);
 
         }
        
