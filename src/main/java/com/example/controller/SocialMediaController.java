@@ -101,7 +101,7 @@ public class SocialMediaController {
                 return ResponseEntity.status(200).body(message);
             } else {
                 System.out.println("No message with this ID found. Please try again");
-                return ResponseEntity.status(404).body(null);  // Change to 404 for not found
+                return ResponseEntity.status(200).body(null);  // Change to 404 for not found
             }
         } 
         catch (Exception e) {
@@ -166,7 +166,7 @@ public class SocialMediaController {
 
             if (messages.size() == 0) {
                 System.out.println("This user seems to have no messages.");
-                return ResponseEntity.status(200).body(null);
+                return ResponseEntity.status(200).body(Collections.emptyList());
             }
             else {
                 return ResponseEntity.status(200).body(messages);
