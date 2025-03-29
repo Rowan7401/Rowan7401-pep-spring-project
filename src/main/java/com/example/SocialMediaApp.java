@@ -70,15 +70,26 @@ public class SocialMediaApp {
         System.out.println("Saved message ID: " + savedMsg.getMessageId());
         System.out.println("Message text: " + msg.getMessageText());
 
-        // Creating message with invalid account ID
-        Message badMsg = new Message();
-        badMsg.setMessageText("Hello from manual test!");
-        Integer invalidID = 192038;
-        badMsg.setPostedBy(invalidID);
+        // // Creating message with invalid account ID
+        // Message badMsg = new Message();
+        // badMsg.setMessageText("Hello from manual test!");
+        // Integer invalidID = 192038;
+        // badMsg.setPostedBy(invalidID);
 
-        Message attBadMsg = messageService.createMessage(badMsg);
-        System.out.println("Bad message ID: " + attBadMsg.getMessageId());
-        System.out.println("Message text: " + attBadMsg.getMessageText());
+        // Message attBadMsg = messageService.createMessage(badMsg);
+        // System.out.println("Bad message ID: " + attBadMsg.getMessageId());
+        // System.out.println("Message text: " + attBadMsg.getMessageText());
+
+        // Updating message
+        // System.out.println();
+        // Message updated = messageService.updateMessage(2, "Mole Skunk!");
+        // System.out.println("Updated message with ID: " + updated.getMessageId() + " to " + updated);
+
+        // Invalid message update
+        System.out.println();
+        Message badUpdated = messageService.updateMessage(2345, "Mole Skunk!");
+        System.out.println("Updated message with ID: " + badUpdated.getMessageId() + " to " + badUpdated);
+
     }
 
 }
