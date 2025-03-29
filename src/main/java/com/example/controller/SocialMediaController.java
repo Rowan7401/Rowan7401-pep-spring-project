@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.entity.*;
@@ -57,25 +57,32 @@ public class SocialMediaController {
 
     @PostMapping("/messages")
     public ResponseEntity<Message> createMessage(@RequestBody Message message) {
-        Integer userId =  message.getPostedBy();
-        Account user = accountService.getById(userId);
+        try {
+            Integer userId =  message.getPostedBy();
+            Account user = accountService.getById(userId);
 
-        if (user != null) {
-            Message createdMessage = messageService.createMessage(message);
-        
-            if (createdMessage != null) {
-                return ResponseEntity.status(200).body(createdMessage);
+            if (user != null) {
+                Message createdMessage = messageService.createMessage(message);
+            
+                if (createdMessage != null) {
+                    return ResponseEntity.status(200).body(createdMessage);
+                }
+                else {
+                    System.out.println("Invalid message attempted to create. Error, please try again.");
+                    return ResponseEntity.status(400).body(null);
+                }
+
             }
             else {
-                System.out.println("Invalid message attempted to create. Error, please try again.");
-                return ResponseEntity.status(400).body(null);
+                System.out.println("User Id invalid. No user with that ID exists in DB.");
+                return null;
             }
-
         }
-        else {
-            System.out.println("User Id invalid. No user with that ID exists in DB.");
+        catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         }
+        
         
     }
 
@@ -87,16 +94,23 @@ public class SocialMediaController {
 
     @GetMapping("/messages/{messageId}")
     public ResponseEntity<Message> getMessageById(@PathVariable Integer messageId) {
-        Message message = messageService.getMessageById(messageId);
+        try {
+            Message message = messageService.getMessageById(messageId);
 
-        if (message != null) {
-            return ResponseEntity.status(200).body(message);
-        }
-        else {
-            System.out.println("No message with this ID found. Please try again");
-            return ResponseEntity.status(200).body(null);
+            if (message != null) {
+                return ResponseEntity.status(200).body(message);
+            }
+            else {
+                System.out.println("No message with this ID found. Please try again");
+                return ResponseEntity.status(200).body(null);
 
+            }
         }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        
     }
 
     @DeleteMapping("/messages/{messageId}")
@@ -116,41 +130,56 @@ public class SocialMediaController {
 
     @PatchMapping("/messages/{messageId}")
     public ResponseEntity<Message> updateMessage(@PathVariable Integer messageId, @RequestBody String newMessageText) {
-        Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
+        try {
+            Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
         
-        if (updatedMessage != null) {
-            if (updatedMessage.getMessageText().length() > 255) {
-                System.out.println("Updated message too long. Please try again with a text less than 255 characters.");
-                return ResponseEntity.status(400).body(null);
-            }
-            else if (updatedMessage.getMessageText().length() == 0) {
-                System.out.println("Updated message text blank. Please try again with valid input.");
-                return ResponseEntity.status(400).body(null);
+            if (updatedMessage != null) {
+                if (updatedMessage.getMessageText().length() > 255) {
+                    System.out.println("Updated message too long. Please try again with a text less than 255 characters.");
+                    return ResponseEntity.status(400).body(null);
+                }
+                else if (updatedMessage.getMessageText().length() == 0) {
+                    System.out.println("Updated message text blank. Please try again with valid input.");
+                    return ResponseEntity.status(400).body(null);
+                }
+                else {
+                    return ResponseEntity.status(200).body(updatedMessage);
+                }
+                
             }
             else {
-                return ResponseEntity.status(200).body(updatedMessage);
+                System.out.println("There seems to be no message with this ID to update.");
+                System.out.println("Please try again");
+                return ResponseEntity.status(400).body(null);
             }
-            
+
         }
-        else {
-            System.out.println("There seems to be no message with this ID to update.");
-            System.out.println("Please try again");
-            return ResponseEntity.status(400).body(null);
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
         }
+        
     }
 
     @GetMapping("/accounts/{accountId}/messages")
     public ResponseEntity<List<Message>> getMessagesByUserId(@PathVariable Integer accountId) {
-        List<Message> messages = messageService.getMessagesByUserId(accountId);
+        try {
+            List<Message> messages = messageService.getMessagesByUserId(accountId);
 
-        if (messages.size() == 0) {
-            System.out.println("This user seems to have no messages.");
-            return ResponseEntity.status(200).body(null);
-        }
-        else {
-            return ResponseEntity.status(200).body(messages);
+            if (messages.size() == 0) {
+                System.out.println("This user seems to have no messages.");
+                return ResponseEntity.status(200).body(null);
+            }
+            else {
+                return ResponseEntity.status(200).body(messages);
 
+            }
         }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        
         
     } 
 }
