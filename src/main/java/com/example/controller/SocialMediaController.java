@@ -99,19 +99,17 @@ public class SocialMediaController {
 
             if (message != null) {
                 return ResponseEntity.status(200).body(message);
-            }
-            else {
+            } else {
                 System.out.println("No message with this ID found. Please try again");
-                return ResponseEntity.status(200).body(null);
-
+                return ResponseEntity.status(404).body(null);  // Change to 404 for not found
             }
-        }
+        } 
         catch (Exception e) {
             System.out.println(e.getMessage());
-            return null;
+            return ResponseEntity.status(500).body(null);  // Internal server error if there's an exception
         }
-        
     }
+
 
     @DeleteMapping("/messages/{messageId}")
     public ResponseEntity<Integer> deleteMessage(@PathVariable Integer messageId) {

@@ -60,14 +60,14 @@ public class MessageService {
     }
 
     public Message getMessageById(Integer messageId) {
-        Message existingM = messageRepository.getById(messageId);
+        Optional<Message> existingM = messageRepository.findById(messageId);
 
-        if (existingM == null) {
+        if (existingM.isPresent()) {
             System.out.println("No message with that ID found. Try again with another ID.");
             return null;
         }
         else {
-            return existingM;
+            return existingM.get();
         }
     }
 
