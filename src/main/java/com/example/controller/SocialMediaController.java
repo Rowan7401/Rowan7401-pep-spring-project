@@ -131,35 +131,34 @@ public class SocialMediaController {
     @PatchMapping("/messages/{messageId}")
     public ResponseEntity<Message> updateMessage(@PathVariable Integer messageId, @RequestBody String newMessageText) {
         try {
-            Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
-        
-            if (updatedMessage != null) {
-                if (newMessageText.length() > 255) {
-                    System.out.println("Updated message too long. Please try again with a text less than 255 characters.");
-                    return ResponseEntity.status(400).body(null);
-                }
-                else if (newMessageText.length() == 0) {
-                    System.out.println("Updated message text blank. Please try again with valid input.");
-                    return ResponseEntity.status(400).body(null);
-                }
-                else {
-                    return ResponseEntity.status(200).body(updatedMessage);
-                }
-                
-            }
-            else {
-                System.out.println("There seems to be no message with this ID to update.");
-                System.out.println("Please try again");
+            if (newMessageText == null || newMessageText.trim().isEmpty()) {
+                System.out.println("Updated message text is blank. Please try again with valid input.");
                 return ResponseEntity.status(400).body(null);
             }
+            else if (newMessageText.length() > 255) {
+                System.out.println("Updated message too long. Please try again with a text less than 255 characters.");
+                return ResponseEntity.status(400).body(null);
+            }
+            else {
+                Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
 
+                if (updatedMessage != null) {
+                    return ResponseEntity.status(200).body(updatedMessage);
+                } else {
+                    System.out.println("There seems to be no message with this ID to update.");
+                    return ResponseEntity.status(400).body(null);
+                }
+
+            }
+
+            
+
+        } catch (Exception e) {
+            System.out.println("Error occurred during update: " + e.getMessage());
+            return ResponseEntity.status(500).body(null); // Return proper 500 instead of null
         }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
-        
     }
+
 
     @GetMapping("/accounts/{accountId}/messages")
     public ResponseEntity<List<Message>> getMessagesByUserId(@PathVariable Integer accountId) {
