@@ -114,11 +114,11 @@ public class SocialMediaController {
     }
 
     @DeleteMapping("/messages/{messageId}")
-    public ResponseEntity<Boolean> deleteMessage(@PathVariable Integer messageId) {
-        Boolean deleted = messageService.deleteMessage(messageId);
+    public ResponseEntity<Integer> deleteMessage(@PathVariable Integer messageId) {
+        boolean deleted = messageService.deleteMessage(messageId);
 
         if (deleted) {
-            return ResponseEntity.status(200).body(deleted);
+            return ResponseEntity.status(200).body(1);
         }
         else {
             System.out.println("No message with this ID found to delete. Please try again.");
