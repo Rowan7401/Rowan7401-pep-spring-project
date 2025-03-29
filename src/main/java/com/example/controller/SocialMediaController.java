@@ -75,7 +75,7 @@ public class SocialMediaController {
             }
             else {
                 System.out.println("User Id invalid. No user with that ID exists in DB.");
-                return null;
+                return ResponseEntity.status(400).body(null);
             }
         }
         catch (Exception e) {
